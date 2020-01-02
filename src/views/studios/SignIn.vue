@@ -1,52 +1,63 @@
 <template>
 <v-container>
 <v-card class="form-signup" min-height="300px">
-  <form-wizard
-    @on-complete="signIn"
-    shape="tab"
-    color="#00bcd4"
-    title="ログイン"
-    subtitle="メールアドレスとパスワードを入力します"
-    finishButtonText="完了！"
-  >
-  <tab-content title="メールアドレスとパスワードでログイン" >
     <v-container justify-center>
         <v-col class="col-6 mx-auto">
             <v-row class="mx-auto">
-                <v-text-field v-model="email" label="メールアドレス" color='#00bcd4' loading></v-text-field>
+                <v-text-field v-model="form.email" label="メールアドレス" color='primary' loading type="name"></v-text-field>
             </v-row>
             <v-row class="mx-auto">
-                <v-text-field v-model="password" label="パスワード" color='#00bcd4' loading></v-text-field>
+                <v-text-field :rules="[rules.required, rules.min]" v-model="form.password" label="パスワード" color='primary' loading  type="password"></v-text-field>
             </v-row>
         </v-col>
     </v-container>
-   </tab-content>
-  </form-wizard>
+    
+    <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn
+          :disabled="!formIsValid"
+          color="primary"
+          type="submit"
+          @click="signIn"
+          class="mx-4"
+        >ログイン</v-btn>
+      </v-card-actions>
 </v-card>
 </v-container>
 </template>
 
 <script>
-import {FormWizard, TabContent} from 'vue-form-wizard'
-import 'vue-form-wizard/dist/vue-form-wizard.min.css'
-
 import firebase from '@/firebase/firebaseAuth.js'
 
 export default {
     name:'stud-signin',
-    components:{
-        'form-wizard': FormWizard,
-        'tab-content': TabContent
-    },
     data(){
-        return{
-            email:null,
-            password:null
-        }
+      const defaultForm = Object.freeze({
+        email:null,
+        password:null,
+      })
+      return{
+        form: Object.assign({}, defaultForm),
+        terms:false,
+        defaultForm,
+        rules: {
+          required: value => !!value || 'Required.',
+          min: v => v.length >= 6 || '6文字以上です',
+          emailMatch: () => ('The email and password you entered don\'t match'),
+        },
+      }
+    },
+    computed: {
+      formIsValid () {
+        return (
+          this.form.email &&
+          this.form.password
+        )
+      },
     },
     methods:{
       signIn() {
-        firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+        firebase.auth().signInWithEmailAndPassword(this.form.email, this.form.password)
         .then(
           user => {//eslint-disable-line
           let authEmail = firebase.auth().currentUser.email
@@ -58,7 +69,7 @@ export default {
         // たぶんwizardのでクリックイベントがとられてて上手くいってない
         // this.finised.preventDefault()
         )
-      }
+      },
     }
 }
 </script>

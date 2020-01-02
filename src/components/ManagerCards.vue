@@ -32,10 +32,10 @@ export default {
       this.authEmail = firebase.auth().currentUser.email;
       this.readAllCards()
       setTimeout(() => {
-            this.cardNumber= this.readCards.length+ 1;
-            console.log('card num is:' + this.cardNumber)
+            this.cardNumber= this.readCards.length;
+            console.log('card num is:' + this.cardNumber)      
               }, 3000);
-      
+      console.log('card num is::' + this.cardNumber)
       
     },
     data(){
@@ -77,24 +77,26 @@ export default {
       },
       saveAgain(){
         this.readAllCards();
-        this.cardNumber= this.readCards.length+ 1;
         let self = this;
         console.log('save again func')
-        for( let i = this.cardNumber - this.cardNumber; i < this.cardNumber; i++ ){
+        for( let i = 0; i < this.cardNumber; i++ ){
+          console.log('I:'+i)
+          console.log('reading:'+this.readCards[i].published)
           db.firestore().collection("posts")
-          .doc(':' + this.cardNumber + ':' + this.authEmail)
+          .doc(':' + i + ':' + this.authEmail)
           .set(this.readCards[i])
           .then(function() {
               console.log("Document successfully written Again!");
-              self.tempStore.informSaved = 'フタタビ保存しました'
-              setTimeout(() => {
-              self.tempStore.informSaved = ''
-              }, 3000);
           })
           .catch(function(error) {
               console.error(error);
-
-          });
+            // this.$router.push({ name: 'auth-email-dashboard', params: { id: this.authEmail } })
+          })
+          .then(function(){
+              self.tempStore.informSaved = 'フタタビ保存しました'
+              setTimeout(() => {
+              self.tempStore.informSaved = ''
+              }, 3000);})
           }
       },
       readAllCards(){
