@@ -1,61 +1,69 @@
 <template>
   <v-app id="app">
     <com-loading v-if="showLoading" class="loading"></com-loading>
-    <v-switch class="switch ma-3 mt-12 pt-6" :label="`Dark Theme`" @change="$vuetify.theme.dark = !$vuetify.theme.dark"></v-switch>
+    <v-switch
+      class="switch ma-3 mt-12 pt-6"
+      :label="`Dark Theme`"
+      @change="$vuetify.theme.dark = !$vuetify.theme.dark"
+    ></v-switch>
     <transition>
-        <router-view class="route"/>
+      <router-view class="route" />
     </transition>
+    <com-bottom></com-bottom>
   </v-app>
 </template>
 
 <script>
-import ComLoading from '@/components/ComLoading.vue';
+import ComLoading from "@/components/ComLoading.vue";
+import ComBottom from "@/components/ComBottom.vue";
 export default {
-  name: 'App',
-  components:{
-    'com-loading':ComLoading
+  name: "App",
+  components: {
+    "com-loading": ComLoading,
+    "com-bottom": ComBottom
   },
-  mounted(){
+  mounted() {
     setTimeout(() => {
-      this.showLoading = false
+      this.showLoading = false;
     }, 800);
   },
-  data(){
-    return{
-      goDark:false,
-      showLoading:true
-    }
+  data() {
+    return {
+      goDark: false,
+      showLoading: true
+    };
   },
-  methods:{
-    darken(){
-      this.$vuetify.theme.dark = !this.$vuetify.theme.dark
+  methods: {
+    darken() {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
     }
-  },
-}
-
+  }
+};
 </script>
 
 <style>
-.v-enter-active, .v-leave-active {
-  transition: opacity .8s;
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.8s;
 }
-.v-enter, .v-leave-to {
+.v-enter,
+.v-leave-to {
   opacity: 0;
 }
-.switch{
+.switch {
   position: absolute;
   z-index: 2;
 }
-.route{
+.route {
   position: absolute;
-  width: 100%
+  width: 100%;
 }
-.loading{
-  position:absolute;
+.loading {
+  position: absolute;
   top: 50%;
-  left:50%;
+  left: 50%;
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
-  z-index:2
+  z-index: 2;
 }
 </style>

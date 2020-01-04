@@ -1,16 +1,18 @@
 <template>
-      <v-btn @click="signout">ログアウト</v-btn>
+  <v-btn @click="signout">ログアウト</v-btn>
 </template>
 
 <script>
-import firebase from '@/firebase/firestore.js'
+import firebase from "@/firebase/firestore.js";
 export default {
-    name: 'manager-signout',
-    methods:{
-        signout(){
-            firebase.auth().signOut().then(
-                this.$router.push('/studios/stud-cards')
-            )}
+  name: "manager-signout",
+  methods: {
+    signout() {
+      firebase
+        .auth()
+        .signOut()
+        .then(this.$router.push("/studios/stud-cards"));
     }
-}
+  }
+};
 </script>

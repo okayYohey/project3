@@ -10,28 +10,26 @@ import ManagerApp from '../views/manager/App.vue'
 import ManagerDashboard from '../views/manager/_authEmail.vue'
 Vue.use(VueRouter)
 
-const routes = [
-  {
+const routes = [{
     path: '/',
     name: 'home',
     component: Home,
-    meta:{
+    meta: {
       requiresAuth: false
     },
   },
   {
     path: '/studios',
-    name:'stud-app',
+    name: 'stud-app',
     component: StudApp,
-    meta:{
+    meta: {
       requiresAuth: false
     },
-    children:[
-      {
+    children: [{
         path: 'stud-cards',
         name: 'stud-cards',
         component: StudCards,
-        meta:{
+        meta: {
           requiresAuth: false
         },
       },
@@ -39,7 +37,7 @@ const routes = [
         path: 'signin',
         name: 'stud-signin',
         component: StudSignin,
-        meta:{
+        meta: {
           requiresAuth: false
         },
       },
@@ -47,7 +45,7 @@ const routes = [
         path: 'signup',
         name: 'stud-signup',
         component: StudSignup,
-        meta:{
+        meta: {
           requiresAuth: false
         },
       },
@@ -57,20 +55,18 @@ const routes = [
     path: '/manager',
     name: 'manager-app',
     component: ManagerApp,
-    meta:{
+    meta: {
       requiresAuth: true
     },
-    children:[
-      {
-        path: '/manager/:id',
-        name: 'auth-email-dashboard',
-        component: ManagerDashboard,
-        //親と同じ
-        meta:{
-          requiresAuth: true
-        }
+    children: [{
+      path: '/manager/:id',
+      name: 'auth-email-dashboard',
+      component: ManagerDashboard,
+      //親と同じ
+      meta: {
+        requiresAuth: true
       }
-    ]
+    }]
   }
 ]
 
@@ -79,7 +75,10 @@ const scrollBehavior = (to, from, savedPosition) => {
     // savedPosition is only available for popstate navigations.
     return savedPosition
   } else {
-    return { x: 0, y: 0 }
+    return {
+      x: 0,
+      y: 0
+    }
   }
 }
 
@@ -98,17 +97,17 @@ let router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
   scrollBehavior,
-  
+
 })
 
-const navguards = router.beforeEach((to, from, next)=>{
+const navguards = router.beforeEach((to, from, next) => {
   // Check for requireedAuth guard
-  if(to.matched.some(record => record.meta.requiresAuth)){
+  if (to.matched.some(record => record.meta.requiresAuth)) {
     // Check if NOT Logged in
-    if( ! firebase.auth().currentUser ){
+    if (!firebase.auth().currentUser) {
       // Go to login
       next({
-        path:'/studios/stud-cards',
+        path: '/studios/stud-cards',
         query: {
           redirect: to.fullPath
         }
@@ -117,12 +116,12 @@ const navguards = router.beforeEach((to, from, next)=>{
       // Proceed to route 
       next();
     }
-  }else if (to.matched.some(record => record.meta.requiresGuest)){
+  } else if (to.matched.some(record => record.meta.requiresGuest)) {
     // Check if Logged in
-    if(firebase.auth().currentUser){
+    if (firebase.auth().currentUser) {
       // Go to login
       next({
-        path:'/',
+        path: '/',
         query: {
           redirect: to.fullPath
         }

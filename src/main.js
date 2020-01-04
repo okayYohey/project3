@@ -5,6 +5,7 @@ import store from './store'
 import vuetify from './plugins/vuetify'
 import firebase from '@/firebase/firestore.js'
 import { nextTick } from 'q'
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
 
 Vue.config.productionTip = false
 

@@ -1,71 +1,127 @@
 <template>
-<v-container class="profile card-list pa-7 d-flex flex-wrap flex-row px-0">
-  <h2 class="d-block">スタジオカード</h2>
-    <stud-card 
-    v-for="readCard in readCards" 
-    v-bind:key="readCard.id"
-    :ItemsFromCardList = "readCard"
-    class="mb-6"
-    >
-    </stud-card>
-</v-container>
+  <v-container class="pa-7 px-0 d-flex flex-column">
+    <h2>スタジオカード</h2>
+    <v-toolbar floating class="search-bar mx-auto">
+      <v-text-field
+        hide-details
+        prepend-icon="search"
+        single-line
+        v-model="query"
+        class="search-input"
+      ></v-text-field>
+      <v-btn @click="searchCards">検索</v-btn>
+    </v-toolbar>
+    <div class="result" v-if="showResult">
+      <h3>検索結果</h3>
+      <v-flex class="d-flex flex-wrap flex-row">
+        <stud-card
+          v-for="searchedCard in searchedCards"
+          v-bind:key="searchedCard.id"
+          :ItemsFromCardList="searchedCard"
+          class="mb-6"
+        ></stud-card>
+      </v-flex>
+      <com-topview :imageURL="img" text="ピラティスで毎日を元気に！"></com-topview>
+    </div>
+    <h3>全店舗</h3>
+    <v-flex class="d-flex flex-wrap flex-row">
+      <stud-card
+        v-for="readCard in readCards"
+        v-bind:key="readCard.id"
+        :ItemsFromCardList="readCard"
+        class="mb-6"
+      ></stud-card>
+    </v-flex>
+    <com-topview
+      imageURL="https://images.unsplash.com/photo-1552674605-db6ffd4facb5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=700&q=60"
+      text="広告募集中"
+    ></com-topview>
+  </v-container>
 </template>
 
 <script>
-import StudCard from '@/components/StudCard.vue'
-import db from '@/firebase/firestore'
-import algoliasearch from 'algoliasearch';
+import StudCard from "@/components/StudCard.vue";
+import ComTopView from "@/components/ComTopView.vue";
+
+import db from "@/firebase/firestore";
+
+const algoliasearch = require("algoliasearch");
+const client = algoliasearch("36GB9RYJMY", "484bcaee9c92de885013f00df843c0f7");
+const index = client.initIndex("posts");
 
 export default {
-    name: 'manager-cards',
-    created(){
-        this.readAllCards();
-        this.index = this.searchClient.initIndex('posts')
-    },
-    components:{
-    'stud-card': StudCard,
-    },
-    data(){
-      return{
-            readCards:[],
-            search_text: '',
-            users: [],
-            searchClient: algoliasearch(  // クライアント
-                'APP_ID',
-                'SECRET_KEY'
-            ),
-            index: null
-        }
-    },
-    methods:{
-      readAllCards(){
-          let self = this
-          let getStore =[]
-          db.firestore().collection("posts").where('published', '==', true)
-          .get()
-          .then(function(querySnapshot) {
-              querySnapshot.forEach(function(doc) {
-                  console.log(doc.id, " => ", doc.data());
-                  self.readCards = doc.data()
-                  getStore.push(doc.data())
-              })
-              self.readCards = getStore
-          })
-          .catch(function(error) {
-              console.error("Error getting documents: ", error);
+  name: "manager-cards",
+  created() {
+    this.readAllCards();
+  },
+  components: {
+    "stud-card": StudCard,
+    "com-topview": ComTopView
+  },
+  data() {
+    return {
+      readCards: [],
+      query: "",
+      searchedCards: [],
+      showResult: false,
+      img:
+        "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
+    };
+  },
+  methods: {
+    readAllCards() {
+      let self = this;
+      let getStore = [];
+      db.firestore()
+        .collection("posts")
+        .where("published", "==", true)
+        .get()
+        .then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+            console.log(doc.id, " => ", doc.data());
+            self.readCards = doc.data();
+            getStore.push(doc.data());
           });
-      },
-      searchUser: function () {
-        var self = this;
-
-        // ここでAlgoliaのAPIへ検索リクエストを投げています
-        // searchメソッドの第一引数が検索文字列です。
-        // 試しに "art" で検索してみます
-            self.index.search("art", (err, { hits } = {}) => {
-                // 検索結果をデータバインドしているusersに格納
-                self.users = hits;
-            });
-        }
+          self.readCards = getStore;
+        })
+        .catch(function(error) {
+          console.error("Error getting documents: ", error);
+        });
+    },
+    searchPosts() {
+      index
+        .search({
+          query: this.query
+          // filters: `published=1`
+        })
+        .then(function(responses) {
+          console.log(responses.hits);
+        });
+    },
+    async searchCards() {
+      let searchResult = await index.search({
+        query: this.query
+        //   filters: `published=1`
+      });
+      console.log(searchResult.hits);
+      this.searchedCards = searchResult.hits;
+      console.log(this.searchedCards);
+      this.showResult = true;
     }
-}
+  }
+};
 </script>
+
+<style scoped>
+.search-input {
+  min-width: 150px;
+}
+.search-bar {
+  margin: 0 auto;
+}
+@media only screen and (min-width: 768px) {
+  .search-input {
+    min-width: 500px;
+  }
+}
+</style>

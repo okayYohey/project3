@@ -12,9 +12,9 @@
         <v-form v-show="editingCard"  class="pa-4 ">
               <v-text-field color="accent" label="画像のURL" type="text" v-model="ItemsFromCardList.photoURL"></v-text-field>
               <v-text-field color="accent" label="スタジオの名前" type="text" v-model="ItemsFromCardList.studioName"></v-text-field>
-              <v-text-field color="accent" label="ロケーション" type="text" v-model="ItemsFromCardList.location"></v-text-field>
+              <!-- <v-text-field color="accent" label="ロケーション" type="text" v-model="ItemsFromCardList.location"></v-text-field> -->
               <v-text-field color="accent" label="住所" type="text" v-model="ItemsFromCardList.address"></v-text-field>
-              <v-text-field color="accent" label="タグ" type="text" v-model="ItemsFromCardList.tag"></v-text-field>
+              <!-- <v-text-field color="accent" label="タグ" type="text" v-model="ItemsFromCardList.tag"></v-text-field> -->
               <v-text-field color="accent" label="紹介文" type="text" v-model="ItemsFromCardList.recommend"></v-text-field>
               <v-text-field color="accent" label="ボタンの名前" type="text" v-model="ItemsFromCardList.btnNormal"></v-text-field>
               <v-text-field color="accent" label="ボタンのリンク先のURL" type="text" v-model="ItemsFromCardList.btnNormalURL"></v-text-field>

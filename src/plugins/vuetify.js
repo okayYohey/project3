@@ -6,7 +6,7 @@ Vue.use(Vuetify);
 
 export default new Vuetify({
   theme: {
-    dark:false,
+    dark: false,
     themes: {
       dark: {
         primary: colors.pink.darken1,

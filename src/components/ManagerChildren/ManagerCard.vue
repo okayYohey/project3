@@ -149,6 +149,7 @@ export default {
   -webkit-transform: rotate(45deg);
   transform: rotate(45deg);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 4;
 }
 .unpublished{
   background:#333

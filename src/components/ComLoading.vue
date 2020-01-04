@@ -1,31 +1,30 @@
 <template>
-<div class="d-flex flex-wrap flex-column">
-    <img :src="loadingGif">
+  <div class="d-flex flex-wrap flex-column">
+    <img :src="loadingGif" />
     <p v-text="text"></p>
-</div>
+  </div>
 </template>
 
 <script>
 export default {
-    name:'com-loading',
-    props: {
-        text: {
-            default: 'ロード中...',
-            type: String
-        },
-        loading: {
-            default: false,
-            type: Boolean
-        }
+  name: "com-loading",
+  props: {
+    text: {
+      default: "ロード中...",
+      type: String
     },
-    data(){
-        return{
-            loadingGif:'https://i.gifer.com/VZvx.gif',
-        }
-    },
-}
+    loading: {
+      default: false,
+      type: Boolean
+    }
+  },
+  data() {
+    return {
+      loadingGif: "https://i.gifer.com/VZvx.gif"
+    };
+  }
+};
 </script>
 
 <style>
-
 </style>
