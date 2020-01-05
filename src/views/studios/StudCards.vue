@@ -1,7 +1,6 @@
 <template>
   <v-container class="pa-7 px-0 d-flex flex-column">
-    <h2>スタジオカード</h2>
-    <v-toolbar floating class="search-bar mx-auto">
+    <v-toolbar floating class="search-bar mx-auto mt-n4">
       <v-text-field
         hide-details
         prepend-icon="search"
@@ -9,10 +8,14 @@
         v-model="query"
         class="search-input"
       ></v-text-field>
-      <v-btn @click="searchCards">検索</v-btn>
+      <v-btn @click="searchCards" class="mx-2" color="primary">検索</v-btn>
     </v-toolbar>
     <div class="result" v-if="showResult">
-      <h3>検索結果</h3>
+      <h2>検索結果</h2>
+      <v-text v-if="noresult">
+        検索結果が見つかりませんでした。
+        <br />掲載店舗を増やしていきますので、これからもご愛顧よろしくお願いします。
+      </v-text>
       <v-flex class="d-flex flex-wrap flex-row">
         <stud-card
           v-for="searchedCard in searchedCards"
@@ -23,7 +26,7 @@
       </v-flex>
       <com-topview :imageURL="img" text="ピラティスで毎日を元気に！"></com-topview>
     </div>
-    <h3>全店舗</h3>
+    <h2>全店舗</h2>
     <v-flex class="d-flex flex-wrap flex-row">
       <stud-card
         v-for="readCard in readCards"
@@ -47,7 +50,7 @@ import db from "@/firebase/firestore";
 
 const algoliasearch = require("algoliasearch");
 const client = algoliasearch("36GB9RYJMY", "484bcaee9c92de885013f00df843c0f7");
-const index = client.initIndex("posts");
+const index = client.initIndex("cards");
 
 export default {
   name: "manager-cards",
@@ -62,6 +65,7 @@ export default {
     return {
       readCards: [],
       query: "",
+      noresult: false,
       searchedCards: [],
       showResult: false,
       img:
@@ -73,7 +77,7 @@ export default {
       let self = this;
       let getStore = [];
       db.firestore()
-        .collection("posts")
+        .collection("cards")
         .where("published", "==", true)
         .get()
         .then(function(querySnapshot) {
@@ -88,25 +92,18 @@ export default {
           console.error("Error getting documents: ", error);
         });
     },
-    searchPosts() {
-      index
-        .search({
-          query: this.query
-          // filters: `published=1`
-        })
-        .then(function(responses) {
-          console.log(responses.hits);
-        });
-    },
     async searchCards() {
       let searchResult = await index.search({
-        query: this.query
-        //   filters: `published=1`
+        query: this.query,
+        filters: `published=1`
       });
       console.log(searchResult.hits);
       this.searchedCards = searchResult.hits;
       console.log(this.searchedCards);
       this.showResult = true;
+      if (this.searchedCards.length == 0) {
+        this.noresult = true;
+      }
     }
   }
 };

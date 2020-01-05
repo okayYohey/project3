@@ -1,7 +1,7 @@
 <template>
-  <div class="studios-page">
+  <div class="blog-page">
     <com-header></com-header>
-    <com-topview h1="ピラティススタジオ紹介"></com-topview>
+    <com-topview h1="コミュニティ | ピラティスに関する情報をシェアしよう"></com-topview>
     <router-view />
     <v-footer>
       <com-footer></com-footer>
@@ -15,7 +15,7 @@ import ComFooter from "@/components/ComFooter.vue";
 import ComTopView from "@/components/ComTopView.vue";
 
 export default {
-  name: "stud-app",
+  name: "blog-app",
   components: {
     "com-header": ComHeader,
     "com-footer": ComFooter,

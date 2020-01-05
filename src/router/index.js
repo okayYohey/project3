@@ -4,10 +4,15 @@ import firebase from '@/firebase/firestore.js'
 import Home from '../views/Home.vue'
 import StudApp from '../views/studios/App.vue'
 import StudCards from '../views/studios/StudCards.vue'
-import StudSignup from '../views/studios/SignUp.vue'
-import StudSignin from '../views/studios/SignIn.vue'
+import SignUp from '../views/SignUp.vue'
+import SignIn from '../views/SignIn.vue'
 import ManagerApp from '../views/manager/App.vue'
 import ManagerDashboard from '../views/manager/_authEmail.vue'
+import BlogApp from '../views/blogs/App.vue'
+import BlogPost from '../views/blogs/_postID.vue'
+import CommunityApp from '../views/community/App.vue'
+import CommunityBoard from '../views/community/Board.vue'
+import CommunityUser from '../views/community/_userID.vue'
 Vue.use(VueRouter)
 
 const routes = [{
@@ -26,30 +31,28 @@ const routes = [{
       requiresAuth: false
     },
     children: [{
-        path: 'stud-cards',
-        name: 'stud-cards',
-        component: StudCards,
-        meta: {
-          requiresAuth: false
-        },
+      path: 'stud-cards',
+      name: 'stud-cards',
+      component: StudCards,
+      meta: {
+        requiresAuth: false
       },
-      {
-        path: 'signin',
-        name: 'stud-signin',
-        component: StudSignin,
-        meta: {
-          requiresAuth: false
-        },
-      },
-      {
-        path: 'signup',
-        name: 'stud-signup',
-        component: StudSignup,
-        meta: {
-          requiresAuth: false
-        },
-      },
-    ]
+    }, ]
+  },
+  {
+    path: '/signin',
+    name: 'signin',
+    component: SignIn,
+    meta: {
+      requiresAuth: false
+    },
+  }, {
+    path: '/signup',
+    name: 'signup',
+    component: SignUp,
+    meta: {
+      requiresAuth: false
+    },
   },
   {
     path: '/manager',
@@ -67,6 +70,49 @@ const routes = [{
         requiresAuth: true
       }
     }]
+  },
+  {
+    path: '/blogs',
+    name: 'blogs-app',
+    component: BlogApp,
+    meta: {
+      requiresAuth: false
+    },
+    children: [{
+      path: '/blogs/:postid',
+      name: 'blogs-post',
+      component: BlogPost,
+      //親と同じ
+      meta: {
+        requiresAuth: false
+      }
+    }]
+  },
+  {
+    path: '/community',
+    name: 'community-app',
+    component: CommunityApp,
+    meta: {
+      requiresAuth: false
+    },
+    children: [{
+        path: 'board',
+        name: 'community-board',
+        component: CommunityBoard,
+        //親と同じ
+        meta: {
+          requiresAuth: false
+        }
+      },
+      {
+        path: ':userid',
+        name: 'community-post',
+        component: CommunityUser,
+        meta: {
+          requiresAuth: false
+        }
+      },
+    ]
   }
 ]
 

@@ -1,8 +1,6 @@
 
 <template>
   <div class="posted-card-id">
-    this is variable page depending on manager id like
-    {{ $route.params.authEmail }}
     <manager-profile></manager-profile>
     <manager-cards></manager-cards>
   </div>
@@ -24,9 +22,11 @@ export default {
   },
   created() {
     var user = firebase.auth().currentUser;
-    if (!user) {
-      this.$router.push("/studios/signin");
-    }
+    setTimeout(() => {
+      if (!user) {
+        this.$router.push("/signin");
+      }
+    }, 200);
   }
 };
 </script>

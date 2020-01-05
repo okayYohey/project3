@@ -103,6 +103,12 @@ export default {
       return this.form.email && this.form.password && this.form.terms;
     }
   },
+  created() {
+    var user = firebase.auth().currentUser;
+    if (user) {
+      this.$router.push("/manager/:manid");
+    }
+  },
   methods: {
     createUser() {
       firebase

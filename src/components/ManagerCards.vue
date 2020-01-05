@@ -62,7 +62,7 @@ export default {
       let self = this;
 
       db.firestore()
-        .collection("posts")
+        .collection("cards")
         .doc(":" + this.cardNumber + ":" + this.authEmail)
         .set(this.tempStore)
         .then(function() {
@@ -70,6 +70,7 @@ export default {
           self.tempStore.informSaved = "保存できました";
           setTimeout(() => {
             self.tempStore.informSaved = "";
+            self.tempStore = null;
           }, 3000);
           self.readCards.push(self.tempStore);
         })
@@ -85,7 +86,7 @@ export default {
         console.log("I:" + i);
         console.log("reading:" + this.readCards[i].published);
         db.firestore()
-          .collection("posts")
+          .collection("cards")
           .doc(":" + i + ":" + this.authEmail)
           .set(this.readCards[i])
           .then(function() {
@@ -107,7 +108,7 @@ export default {
       let self = this;
       let getStore = [];
       db.firestore()
-        .collection("posts")
+        .collection("cards")
         .where("authID", "==", this.authID)
         .where("trash", "==", false)
         .get()

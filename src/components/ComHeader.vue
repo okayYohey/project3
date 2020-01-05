@@ -2,11 +2,11 @@
   <v-app-bar fixed app color="primary" dark hide-on-scroll>
     <v-toolbar-title class="font-weight-bold title" color="primary" v-text="title" />
     <v-spacer></v-spacer>
-    <v-btn class="mx-1" to="/" color="primary" dark>ホーム</v-btn>
-    <v-btn class="mx-1" to="/studios/stud-cards" color="primary" dark>スタジオ</v-btn>
-    <v-btn class="mx-1" to="/blogs/index" color="primary">ブログ</v-btn>
-    <v-btn class="mx-1" to="/community/index" color="primary">コミュニティ</v-btn>
-    <v-btn class="mx-1" v-show="isLoggedIn" to="/manager/:manid">管理画面</v-btn>
+    <v-btn class="mx-1" to="/" color="white" text>ホーム</v-btn>
+    <v-btn class="mx-1" to="/studios/stud-cards" color="white" text>スタジオ</v-btn>
+    <v-btn class="mx-1" to="/blogs" color="white" text>ブログ</v-btn>
+    <v-btn class="mx-1" to="/community/board" color="white" text>コミュニティ</v-btn>
+    <v-btn class="mx-1" v-show="isLoggedIn" to="/manager/:manid" color="secondary">管理画面</v-btn>
   </v-app-bar>
 </template>
 

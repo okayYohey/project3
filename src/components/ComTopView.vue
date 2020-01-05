@@ -3,7 +3,7 @@
     <v-parallax dark :src="imageURL" height="250">
       <v-row align="center" justify="center">
         <v-col class="text-center" cols="12">
-          <h2 class="mt-12 display-1 font-weight-bold card-title">{{ text }}</h2>
+          <h1 class="mt-12 display-1 font-weight-bold card-title">{{ h1 }}</h1>
         </v-col>
       </v-row>
     </v-parallax>
@@ -18,7 +18,7 @@ export default {
       default:
         "https://images.unsplash.com/photo-1570591310108-4f34c28ab007?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80"
     },
-    text: {
+    h1: {
       default: "みんなのピラティス"
     }
   }

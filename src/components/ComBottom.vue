@@ -8,23 +8,23 @@
     grow
     class="bottom pt-2"
   >
-    <v-btn to="/">
+    <v-btn value="home" to="/">
       <span>ホーム</span>
       <v-icon>mdi-home</v-icon>
     </v-btn>
-    <v-btn to="/studios/stud-cards">
+    <v-btn value="sutudios" to="/studios/stud-cards">
       <span>スタジオ</span>
       <v-icon>mdi-map-marker</v-icon>
     </v-btn>
-    <v-btn>
+    <v-btn value="blogs" to="/blogs">
       <span>ブログ</span>
       <v-icon>mdi-pen</v-icon>
     </v-btn>
-    <v-btn>
+    <v-btn value="community" to="/community/board">
       <span>コミュニティ</span>
       <v-icon>mdi-heart</v-icon>
     </v-btn>
-    <v-btn v-show="isLoggedIn" to="/manager/:manid">
+    <v-btn value="manager" v-show="isLoggedIn" to="/manager/:manid">
       <span>管理画面</span>
       <v-icon>mdi-settings</v-icon>
     </v-btn>
@@ -40,6 +40,12 @@ export default {
     if (firebase.auth().currentUser) {
       this.isLoggedIn = true;
     }
+  },
+  data() {
+    return {
+      isLoggedIn: false,
+      bottomNav: ""
+    };
   }
 };
 </script>

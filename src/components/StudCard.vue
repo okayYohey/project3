@@ -68,7 +68,7 @@ export default {
   max-width: 280px;
 }
 .card-title {
-  background-color: rgba(216, 27, 96, 0.3);
+  background-color: rgba(216, 27, 96, 0.5);
   display: block;
   width: 100%;
 }
