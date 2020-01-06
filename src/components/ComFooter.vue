@@ -25,6 +25,11 @@ export default {
     if (firebase.auth().currentUser) {
       this.isLoggedIn = true;
     }
+  },
+  data() {
+    return {
+      isLoggedIn: false
+    };
   }
 };
 </script>

@@ -2,8 +2,8 @@
   <div class="board-page">
     <v-container class="justify-center">
       <community-Post
-        v-for="readPost in readPosts"
-        v-bind:key="readPost.id"
+        v-for="readPost in readPosts.slice().reverse()"
+        v-bind:key="readPost.IDforAll"
         :ItemsFromPosts="readPost"
         class="mb-4"
       ></community-Post>
@@ -22,7 +22,12 @@
       <v-icon v-if="!createPost">mdi-pencil</v-icon>
       <v-icon v-if="createPost">mdi-close</v-icon>
     </v-btn>
-    <community-createPost class="create-card" v-if="createPost" :pushedSave="onPost"></community-createPost>
+    <community-createPost
+      class="create-card"
+      v-if="createPost"
+      @pushedSave="onPost"
+      :ItemsFromPosts="tempStore"
+    ></community-createPost>
   </div>
 </template>
 
@@ -39,54 +44,140 @@ export default {
     "community-createPost": CommunityCreatePost
   },
   created() {
-    this.authEmail = firebase.auth().currentUser.email;
-    let self = this;
-    let getStore = [];
-    db.firestore()
-      .collection("posts")
-      .where("published", "==", true)
-      .get()
-      .then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
-          console.log(doc.id, " => ", doc.data());
-          self.readPosts = doc.data();
-          getStore.push(doc.data());
-        });
-        self.readPosts = getStore;
-      })
-      .catch(function(error) {
-        console.error("Error getting documents: ", error);
-      });
+    let user = firebase.auth().currentUser;
+    if (user) {
+      this.authEmail = user.email;
+      this.tempStore.authEmail = user.email;
+      this.tempStore.authID = user.uid;
+    }
+
+    this.readMyPosts();
+    this.readAllPosts();
+    this.getProfile();
+    this.sortedItemsByIDforAll();
   },
   data() {
     return {
       readPosts: [],
+      readMyPost: [],
+      readProfiles: [],
       createPost: false,
       authEmail: null,
-      tempStore: null
+      postNumber: 0,
+      sortOrder: 1,
+      tempStore: {
+        informSaved: "",
+        authEmail: null,
+        authID: null,
+        trash: false,
+        published: true,
+        postContent: null,
+        IDforAll: 0,
+        IDforMe: 0,
+        profileImg: "",
+        profileUrl: "",
+        date: String
+      }
     };
   },
   methods: {
     onPost() {
-      this.createPost = false;
-      console.log("func savefirst");
       let self = this;
-
+      self.readMyPosts();
+      self.postNumber = self.readMyPost.length;
+      self.tempStore.IDforMe = self.postNumber;
+      self.readAllPosts();
+      self.tempStore.IDforAll = this.readPosts.length;
+      self.getProfile();
+      self.tempStore.profileImg = self.readProfiles.profileImg;
+      self.tempStore.profileUrl = self.readProfiles.profileUrl;
+      let now = new Date();
+      self.tempStore.date =
+        now.getDate() +
+        1 +
+        ":" +
+        now.getHours() +
+        ":" +
+        now.getMinutes() +
+        ":" +
+        now.getSeconds();
+      console.log("the number of card is :" + this.postNumber);
       db.firestore()
         .collection("posts")
-        .doc(":" + this.cardNumber + ":" + this.authEmail)
-        .set(this.tempStore)
+        .doc(":" + this.postNumber + ":" + this.authEmail)
+        .set(self.tempStore)
         .then(function() {
-          console.log("Document successfully written!");
-          self.tempStore.informSaved = "保存できました";
+          self.tempStore.informSaved = "投稿できました";
+
+          //reset
           setTimeout(() => {
             self.tempStore.informSaved = "";
-          }, 3000);
-          self.readCards.push(self.tempStore);
+            self.createPost = false;
+            self.tempStore.postContent = " ";
+          }, 100);
+          self.readAllPosts();
         })
         .catch(function(error) {
-          console.error(error);
+          console.error("here:::::::" + error);
         });
+    },
+    readAllPosts() {
+      let self = this;
+      let getStore = [];
+      db.firestore()
+        .collection("posts")
+        .where("published", "==", true)
+        .get()
+        .then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+            getStore.push(doc.data());
+          });
+          self.readPosts = getStore;
+        })
+        .catch(function(error) {
+          console.error("Error getting documents: ", error);
+        });
+    },
+    readMyPosts() {
+      let self = this;
+      let getStore = [];
+      db.firestore()
+        .collection("posts")
+        .where("authEmail", "==", self.authEmail)
+        .get()
+        .then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+            getStore.push(doc.id);
+          });
+          self.readMyPost = getStore;
+        })
+        .catch(function(error) {
+          console.error("Error getting documents: ", error);
+        });
+    },
+    getProfile() {
+      let self = this;
+      let getStore = [];
+      db.firestore()
+        .collection("managers")
+        .where("authEmail", "==", self.authEmail)
+        .get()
+        .then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+            // getStore.push(doc.data());
+            getStore = doc.data();
+          });
+          self.readProfiles = getStore;
+        });
+    },
+    sortedItemsByIDforAll() {
+      return this.readPosts.sort((a, b) => {
+        return a.IDforAll < b.IDforAll
+          ? -this.sortOrder
+          : a.IDforAll > b.IDforAll
+          ? this.sortOrder
+          : 0;
+      });
     }
   }
 };
@@ -102,6 +193,7 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
   max-width: 280px;
+  z-index: 2;
 }
 @media only screen and (min-width: 768px) {
   .card {
