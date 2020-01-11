@@ -1,8 +1,10 @@
 <template>
   <div class="div">
     <manager-header></manager-header>
+
     <v-container class="mt-12 pt-12">
-      <h1>管理者画面</h1>
+      <v-breadcrumbs :items="listsManual" divider=">"></v-breadcrumbs>
+      <h1>ダッシュボード</h1>
     </v-container>
     <router-view />
     <com-footer></com-footer>
@@ -18,6 +20,20 @@ export default {
   components: {
     "manager-header": ManagerHeader,
     "com-footer": ComFooter
+  },
+  data() {
+    return {
+      listsManual: [
+        {
+          text: "ホーム",
+          href: "/"
+        },
+        {
+          text: "ダッシュボード",
+          href: "/community/board"
+        }
+      ]
+    };
   }
 };
 </script>

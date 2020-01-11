@@ -16,6 +16,14 @@
 <script>
 import ComLoading from "@/components/ComLoading.vue";
 import ComBottom from "@/components/ComBottom.vue";
+import routes from "@/router/index.js";
+import Vue from "vue";
+import VueMeta from "vue-meta";
+
+Vue.use(VueMeta, {
+  // optional pluginOptions
+  refreshOnceOnNavigation: true
+});
 export default {
   name: "App",
   components: {
@@ -27,16 +35,32 @@ export default {
       this.showLoading = false;
     }, 800);
   },
+  props: {
+    routes
+  },
   data() {
     return {
+      initialized: false,
       goDark: false,
-      showLoading: true
+      showLoading: true,
+      breadcrumbList: []
     };
   },
+  watch: {},
   methods: {
     darken() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
     }
+  },
+  metaInfo() {
+    return {
+      title: "ピラティススタジオの比較から最新情報まで！",
+      titleTemplate: "%s | みんなのピラティス",
+      htmlAttrs: {
+        lang: "ja",
+        amp: true
+      }
+    };
   }
 };
 </script>
@@ -52,6 +76,7 @@ export default {
 }
 .switch {
   position: absolute;
+
   z-index: 2;
 }
 .route {

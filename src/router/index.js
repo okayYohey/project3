@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import firebase from '@/firebase/firestore.js'
 import Home from '../views/Home.vue'
 import StudApp from '../views/studios/App.vue'
-import StudCards from '../views/studios/StudCards.vue'
+import StudCards from '../views/studios/_StudCards.vue'
 import SignUp from '../views/SignUp.vue'
 import SignIn from '../views/SignIn.vue'
 import ManagerApp from '../views/manager/App.vue'
@@ -20,7 +20,10 @@ const routes = [{
     name: 'home',
     component: Home,
     meta: {
-      requiresAuth: false
+      requiresAuth: false,
+      breadcrumb: [{
+        name: 'ホーム'
+      }]
     },
   },
   {
@@ -31,11 +34,11 @@ const routes = [{
       requiresAuth: false
     },
     children: [{
-      path: 'stud-cards',
+      path: ':stud-cards',
       name: 'stud-cards',
       component: StudCards,
       meta: {
-        requiresAuth: false
+        requiresAuth: false,
       },
     }, ]
   },
@@ -44,14 +47,20 @@ const routes = [{
     name: 'signin',
     component: SignIn,
     meta: {
-      requiresAuth: false
+      requiresAuth: false,
+      breadcrumb: [{
+        name: 'ログイン'
+      }]
     },
   }, {
     path: '/signup',
     name: 'signup',
     component: SignUp,
     meta: {
-      requiresAuth: false
+      requiresAuth: false,
+      breadcrumb: [{
+        name: '会員登録'
+      }]
     },
   },
   {
@@ -59,15 +68,21 @@ const routes = [{
     name: 'manager-app',
     component: ManagerApp,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      breadcrumb: [{
+        name: 'ダッシュボード'
+      }]
     },
     children: [{
-      path: '/manager/:id',
-      name: 'auth-email-dashboard',
+      path: ':authEmail',
+      name: 'auth-dashboard',
       component: ManagerDashboard,
       //親と同じ
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        breadcrumb: [{
+          name: 'ダッシュボード'
+        }]
       }
     }]
   },
@@ -76,7 +91,10 @@ const routes = [{
     name: 'blogs-app',
     component: BlogApp,
     meta: {
-      requiresAuth: false
+      requiresAuth: false,
+      breadcrumb: [{
+        name: 'ブログ'
+      }]
     },
     children: [{
       path: '/blogs/:postid',
@@ -84,7 +102,10 @@ const routes = [{
       component: BlogPost,
       //親と同じ
       meta: {
-        requiresAuth: false
+        requiresAuth: false,
+        breadcrumb: [{
+          name: '情報'
+        }]
       }
     }]
   },
@@ -101,7 +122,11 @@ const routes = [{
         component: CommunityBoard,
         //親と同じ
         meta: {
-          requiresAuth: false
+          requiresAuth: false,
+          breadcrumb: [{
+            name: 'コミュニティ'
+          }]
+
         }
       },
       {
@@ -109,7 +134,10 @@ const routes = [{
         name: 'community-post',
         component: CommunityUser,
         meta: {
-          requiresAuth: false
+          requiresAuth: false,
+          breadcrumb: [{
+            name: 'ユーザープロフィール'
+          }]
         }
       },
     ]

@@ -1,8 +1,7 @@
 <template>
-  <div class="manager-card mx-auto">
-    <p class="my-auto">{{ informSaved }}</p>
+  <div class="stud-card mx-auto">
     <v-badge color="purple" overlap>
-      <v-card class="card">
+      <v-card class="card" :style="small">
         <!-- <div class="ribbon17-content">
       <span v-show="isNew" class="ribbon17">New</span>
       <span v-show="sponsor" class="ribbon17 sponsor">編集者のおすすめ</span>
@@ -21,7 +20,7 @@
           <v-card-text class="text--primary">
             <p v-show="!editingCard">{{ItemsFromCardList.recommend}}</p>
           </v-card-text>
-          <v-card-actions class="action">
+          <v-card-actions class="action" :style="action">
             <v-container class="pa-0">
               <v-btn
                 color="primary"
@@ -48,7 +47,7 @@
 <script>
 export default {
   name: "stud-card",
-  props: ["ItemsFromCardList"],
+  props: ["ItemsFromCardList", "small", "action"],
   created() {},
   data() {
     return {
@@ -72,6 +71,7 @@ export default {
   display: block;
   width: 100%;
 }
+
 @media only screen and (min-width: 768px) {
   .card {
     display: grid;

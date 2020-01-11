@@ -1,8 +1,9 @@
 <template>
   <div class="studios-page">
     <com-header></com-header>
-    <com-topview h1="ピラティススタジオ紹介"></com-topview>
-    <router-view />
+    <com-topview h1="ピラティススタジオ紹介" h1Plus="一緒にあなたにぴったりなスタジオを探しましょう"></com-topview>
+    <v-breadcrumbs :items="listsManual" divider=">"></v-breadcrumbs>
+    <router-view :query="query" />
     <v-footer>
       <com-footer></com-footer>
     </v-footer>
@@ -20,6 +21,24 @@ export default {
     "com-header": ComHeader,
     "com-footer": ComFooter,
     "com-topview": ComTopView
+  },
+  data() {
+    return {
+      query: "",
+      listsManual: [
+        {
+          text: "ホーム",
+          href: "/"
+        },
+        {
+          text: "スタジオ",
+          href: "/studios/stud-cards"
+        }
+      ]
+    };
+  },
+  metaInfo: {
+    title: "ピラティススタジオの比較"
   }
 };
 </script>

@@ -1,11 +1,10 @@
 <template>
-  <div class="blog-page">
+  <div class="community-page">
     <com-header></com-header>
-    <com-topview h1="コミュニティ | ピラティスに関する情報をシェアしよう"></com-topview>
+    <com-topview h1="コミュニティ" h1Plus="ピラティスに関する情報をシェアしよう"></com-topview>
+    <v-breadcrumbs :items="listsManual" divider=">"></v-breadcrumbs>
     <router-view />
-    <v-footer>
-      <com-footer></com-footer>
-    </v-footer>
+    <com-footer></com-footer>
   </div>
 </template>
 
@@ -20,6 +19,23 @@ export default {
     "com-header": ComHeader,
     "com-footer": ComFooter,
     "com-topview": ComTopView
+  },
+  data() {
+    return {
+      listsManual: [
+        {
+          text: "ホーム",
+          href: "/"
+        },
+        {
+          text: "コミュニティ",
+          href: "/community/board"
+        }
+      ]
+    };
+  },
+  metaInfo: {
+    title: "みんなのコミュニティでピラティス情報を共有しよう"
   }
 };
 </script>

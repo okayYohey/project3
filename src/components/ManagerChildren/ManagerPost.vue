@@ -1,5 +1,42 @@
 <template>
   <div class="manager-card mx-auto">
+    <!-- <v-btn
+      color="secondary"
+      class="my-2 mr-2"
+      v-show="!editingCard"
+      @click="editingCard = true"
+    >編集する</v-btn>
+    <v-btn
+      color="accent"
+      class="my-2 mr-2"
+      v-show="editingCard"
+      @click="editingCard = false; saveCard();"
+    >保存する</v-btn>
+    <v-btn
+      class="my-2 mr-2"
+      v-show="!editingCard && ItemsFromCardList.published"
+      @click="ItemsFromCardList.published = false; saveCard();"
+    >非公開</v-btn>
+    <v-btn
+      class="my-2 mr-2"
+      v-show="!editingCard && !ItemsFromCardList.published"
+      @click="ItemsFromCardList.published = true; saveCard();"
+    >公開</v-btn>
+    <v-btn
+      class="my-2 mr-2"
+      v-show="!editingCard"
+      @click="ItemsFromCardList.trash=true; saveCard()"
+    >削除する</v-btn>
+    <p class="my-auto">{{ informSaved }}</p>
+    <v-form v-show="editingCard" class="px-3">
+      <v-text-field color="accent" label="画像のURL" type="text" v-model="ItemsFromCardList.photoURL"></v-text-field>
+      <v-text-field
+        color="accent"
+        label="スタジオの名前"
+        type="text"
+        v-model="ItemsFromCardList.studioName"
+      ></v-text-field>
+    </v-form>
     <v-card class="mx-auto" color="white" max-width="800" max-height="300">
       <v-card-title class="pt-2">
         <v-icon left>mdi-star</v-icon>
@@ -29,33 +66,37 @@
           </v-row>
         </v-list-item>
       </v-card-actions>
-    </v-card>
+    </v-card>-->
   </div>
 </template>
 
-
 <script>
 export default {
-  name: "stud-card",
-  props: ["ItemsFromPosts"],
-  created() {},
+  name: "manager-profile-card",
+  props: ["ItemsFromCardList", "ItemsFromPosts"],
+  created() {
+    this.isPublished = "#88f";
+  },
   data() {
     return {
-      isPushed: false,
       informSaved: "",
       saved: true,
       editingCard: false,
       published: false,
       show: false,
       premier: false,
-      hover: true,
-      wrapper: true,
-      value: true
+      isPublished: "secondary"
     };
   },
   methods: {
-    toProfile() {
-      this.$router.push("/manager/:profile");
+    saveCard() {
+      console.log("submit to parent");
+      this.$emit("pushedSave");
+      this.editingCard = false;
+    },
+    removeTrash() {
+      console.log("subnit to parent");
+      this.$emit("pushedRemoveTrash");
     }
   }
 };
@@ -63,15 +104,12 @@ export default {
 
 <style scoped>
 .card {
-  max-width: 280px;
+  max-width: 350px;
 }
 .card-title {
-  background-color: rgba(216, 27, 96, 0.3);
+  background-color: rgba(216, 27, 96, 0.5);
   display: block;
   width: 100%;
-}
-.icon {
-  border-radius: 20px;
 }
 @media only screen and (min-width: 768px) {
   .card {
@@ -80,9 +118,8 @@ export default {
     grid-column-gap: 1em;
     min-width: 730px;
   }
-  .action {
-    position: absolute;
-    bottom: 10px;
+  .group {
+    display: grid;
   }
 }
 
@@ -111,6 +148,7 @@ export default {
   -webkit-transform: rotate(45deg);
   transform: rotate(45deg);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 4;
 }
 .unpublished {
   background: #333;

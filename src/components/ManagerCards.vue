@@ -94,7 +94,7 @@ export default {
           })
           .catch(function(error) {
             console.error(error);
-            // this.$router.push({ name: 'auth-email-dashboard', params: { id: this.authEmail } })
+            // this.$router.push({ name: 'auth-dashboard', params: { id: this.authEmail } })
           })
           .then(function() {
             self.tempStore.informSaved = "フタタビ保存しました";

@@ -2,7 +2,7 @@
   <div class="studios-page">
     <com-header></com-header>
     <com-topview h1="ログイン"></com-topview>
-
+    <v-breadcrumbs :items="listsManual" divider=">"></v-breadcrumbs>
     <v-container>
       <v-card class="form-signup" min-height="300px">
         <v-container justify-center>
@@ -69,6 +69,16 @@ export default {
       form: Object.assign({}, defaultForm),
       terms: false,
       defaultForm,
+      listsManual: [
+        {
+          text: "ホーム",
+          href: "/"
+        },
+        {
+          text: "ログイン",
+          href: "/signin"
+        }
+      ],
       rules: {
         required: value => !!value || "Required.",
         min: v => v.length >= 6 || "6文字以上です",
@@ -84,7 +94,8 @@ export default {
   created() {
     var user = firebase.auth().currentUser;
     if (user) {
-      this.$router.push("/manager/:manid");
+      let authEmail = user.email;
+      this.$router.push({ path: `/manager/${authEmail}` });
     }
   },
   methods: {
@@ -94,12 +105,8 @@ export default {
         .signInWithEmailAndPassword(this.form.email, this.form.password)
         .then(
           function() {
-            //eslint-disable-line
-            let authEmail = firebase.auth().currentUser.email;
-            this.$router.push({
-              name: "auth-email-dashboard",
-              params: { id: authEmail }
-            });
+            let authEmail = this.form.email;
+            this.$router.push({ path: `/manager/${authEmail}` });
           },
           function(err) {
             alert(err.message);

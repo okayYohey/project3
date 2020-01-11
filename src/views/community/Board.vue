@@ -1,12 +1,12 @@
 <template>
   <div class="board-page">
     <v-container class="justify-center">
-      <community-Post
+      <community-post
         v-for="readPost in readPosts.slice().reverse()"
         v-bind:key="readPost.IDforAll"
         :ItemsFromPosts="readPost"
         class="mb-4"
-      ></community-Post>
+      ></community-post>
     </v-container>
     <v-btn
       @click="createPost = !createPost"
@@ -40,7 +40,7 @@ import db from "@/firebase/firestore";
 export default {
   name: "community-board",
   components: {
-    "community-Post": CommunityPost,
+    "community-post": CommunityPost,
     "community-createPost": CommunityCreatePost
   },
   created() {
@@ -65,6 +65,7 @@ export default {
       authEmail: null,
       postNumber: 0,
       sortOrder: 1,
+
       tempStore: {
         informSaved: "",
         authEmail: null,
@@ -127,6 +128,7 @@ export default {
       db.firestore()
         .collection("posts")
         .where("published", "==", true)
+        .orderBy("IDforAll")
         .get()
         .then(function(querySnapshot) {
           querySnapshot.forEach(function(doc) {

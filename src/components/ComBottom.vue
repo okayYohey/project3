@@ -12,7 +12,7 @@
       <span>ホーム</span>
       <v-icon>mdi-home</v-icon>
     </v-btn>
-    <v-btn value="sutudios" to="/studios/stud-cards">
+    <v-btn value="sutudios" :to="{ path:'/studios/stud-cards'}">
       <span>スタジオ</span>
       <v-icon>mdi-map-marker</v-icon>
     </v-btn>
@@ -24,7 +24,7 @@
       <span>コミュニティ</span>
       <v-icon>mdi-heart</v-icon>
     </v-btn>
-    <v-btn value="manager" v-show="isLoggedIn" to="/manager/:manid">
+    <v-btn value="manager" v-show="isLoggedIn" to="/manager/:authEmail">
       <span>管理画面</span>
       <v-icon>mdi-settings</v-icon>
     </v-btn>

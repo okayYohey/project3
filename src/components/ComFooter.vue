@@ -9,7 +9,7 @@
           <v-btn to="/signup" class="mx-2 my-4" color="success" dark>会員登録</v-btn>
           <v-btn to="/signin" class="mx-2 my-4" color="accent" dark>ログイン</v-btn>
         </v-row>
-        <v-row>
+        <v-row class="justify-space-around flex-row my-4">
           <span>&copy; 2019 YNU みんなのピラティス All Rights Reserved</span>
         </v-row>
       </v-col>
