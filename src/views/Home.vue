@@ -132,6 +132,8 @@ export default {
       let self = this;
       let getStore = [];
       db.firestore()
+        .collection("users")
+        .doc("authID")
         .collection("cards")
         .where("published", "==", true)
         .get()
@@ -151,6 +153,8 @@ export default {
       let self = this;
       let getStore = [];
       db.firestore()
+        .collection("users")
+        .doc("authID")
         .collection("posts")
         .where("published", "==", true)
         .get()

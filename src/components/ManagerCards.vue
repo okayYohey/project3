@@ -62,6 +62,8 @@ export default {
       let self = this;
 
       db.firestore()
+        .collection("users")
+        .doc("authID")
         .collection("cards")
         .doc(":" + this.cardNumber + ":" + this.authEmail)
         .set(this.tempStore)
@@ -86,6 +88,8 @@ export default {
         console.log("I:" + i);
         console.log("reading:" + this.readCards[i].published);
         db.firestore()
+          .collection("users")
+          .doc("authID")
           .collection("cards")
           .doc(":" + i + ":" + this.authEmail)
           .set(this.readCards[i])
@@ -108,6 +112,8 @@ export default {
       let self = this;
       let getStore = [];
       db.firestore()
+        .collection("users")
+        .doc("authID")
         .collection("cards")
         .where("authID", "==", this.authID)
         .where("trash", "==", false)

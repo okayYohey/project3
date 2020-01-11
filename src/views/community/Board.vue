@@ -104,6 +104,8 @@ export default {
         now.getSeconds();
       console.log("the number of card is :" + this.postNumber);
       db.firestore()
+        .collection("users")
+        .doc("authID")
         .collection("posts")
         .doc(":" + this.postNumber + ":" + this.authEmail)
         .set(self.tempStore)
@@ -126,6 +128,8 @@ export default {
       let self = this;
       let getStore = [];
       db.firestore()
+        .collection("users")
+        .doc("authID")
         .collection("posts")
         .where("published", "==", true)
         .orderBy("IDforAll")
@@ -144,6 +148,8 @@ export default {
       let self = this;
       let getStore = [];
       db.firestore()
+        .collection("users")
+        .doc("authID")
         .collection("posts")
         .where("authEmail", "==", self.authEmail)
         .get()
@@ -161,7 +167,7 @@ export default {
       let self = this;
       let getStore = [];
       db.firestore()
-        .collection("managers")
+        .collection("users")
         .where("authEmail", "==", self.authEmail)
         .get()
         .then(function(querySnapshot) {

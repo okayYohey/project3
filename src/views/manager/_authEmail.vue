@@ -1,11 +1,10 @@
 
 <template>
   <div class="posted-card-id">
-    <v-switch v-model="isStudioMode" label="スタジオ管理者モード"></v-switch>
-    <div class>{{ $route.params.authEmail}}</div>
-    <manager-profile></manager-profile>
-    <manager-posts></manager-posts>
-    <manager-cards v-if="isStudioMode"></manager-cards>
+    <div class>{{ $route.params.authEmail}}---{{StudioMode}}</div>
+    <manager-profile @show-mode="isStudioMode"></manager-profile>
+    <manager-posts v-if="!StudioMode"></manager-posts>
+    <manager-cards v-if="StudioMode"></manager-cards>
   </div>
 </template>
 
@@ -24,7 +23,7 @@ export default {
   },
   data() {
     return {
-      isStudioMode: false
+      StudioMode: false
     };
   },
   created() {
@@ -32,8 +31,18 @@ export default {
     setTimeout(() => {
       if (!user) {
         this.$router.push("/signin");
+      } else {
+        let authEmail = user.email;
+        this.$router.push({ path: `/manager/${authEmail}` });
       }
     }, 200);
+  },
+  methods: {
+    isStudioMode(mode) {
+      console.log("before function, mode is " + mode);
+      this.StudioMode = mode;
+      console.log("after function, studio mode is " + this.StudioMode);
+    }
   }
 };
 </script>

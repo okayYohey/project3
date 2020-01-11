@@ -26,11 +26,24 @@
       <v-simple-table class="py-3 group">
         <tbody>
           <tr v-show="!editingProfile">
-            <th>名前（会社）</th>
+            <th>スタジオ管理者モード</th>
+            <td v-if="isStudioMode">スタジオ管理者モード</td>
+            <td v-else>一般ユーザーモード</td>
+          </tr>
+          <tr v-show="editingProfile">
+            <th>スタジオ管理者モード</th>
+            <td>
+              <v-switch v-model="isStudioMode"></v-switch>
+            </td>
+          </tr>
+          <tr v-show="!editingProfile">
+            <th v-if="isStudioMode">会社名</th>
+            <th v-else>名前</th>
             <td>{{ studioName }}</td>
           </tr>
           <tr v-show="editingProfile">
-            <th>名前（会社）</th>
+            <th v-if="isStudioMode">会社名</th>
+            <th v-else>名前</th>
             <td>
               <input type="text" v-model="studioName" required />
             </td>
@@ -42,11 +55,13 @@
             </td>
           </tr>
           <tr v-show="!editingProfile">
-            <th>連絡用メールアドレス</th>
+            <th v-if="isStudioMode">連絡用メールアドレス</th>
+            <th v-else>メールアドレス</th>
             <td>{{ contactEmail }}</td>
           </tr>
           <tr v-show="editingProfile">
-            <th>メールアドレス</th>
+            <th v-if="isStudioMode">連絡用メールアドレス</th>
+            <th v-else>メールアドレス</th>
             <td>
               <input type="email" v-model="contactEmail" required />
             </td>
@@ -61,31 +76,31 @@
               <input type="text" v-model="address" required />
             </td>
           </tr>
-          <tr v-show="!editingProfile">
+          <tr v-if="isStudioMode" v-show="!editingProfile">
             <th>スタジオの数</th>
             <td>{{ howManyShops }}</td>
           </tr>
-          <tr v-show="editingProfile">
+          <tr v-if="isStudioMode" v-show="editingProfile">
             <th>スタジオの数</th>
             <td>
               <input type="number" v-model="howManyShops" placeholder="数字を入力" required />
             </td>
           </tr>
-          <tr v-show="!editingProfile">
+          <tr v-if="isStudioMode" v-show="!editingProfile">
             <th>担当者名</th>
             <td>{{ contactName }}</td>
           </tr>
-          <tr v-show="editingProfile">
+          <tr v-if="isStudioMode" v-show="editingProfile">
             <th>担当者名</th>
             <td>
               <input type="text" v-model="contactName" />
             </td>
           </tr>
-          <tr v-show="!editingProfile">
+          <tr v-if="isStudioMode" v-show="!editingProfile">
             <th>ビジネススタイル</th>
             <td>{{ radioTypes }}</td>
           </tr>
-          <tr v-show="editingProfile">
+          <tr v-if="isStudioMode" v-show="editingProfile">
             <th>ビジネススタイル</th>
             <td>
               <v-radio-group v-model="radioTypes">
@@ -124,13 +139,16 @@ export default {
       studioName: "",
       authID: "",
       authEmail: "",
-      contactEmail: ""
+      contactEmail: "",
+      isStudioMode: false
     };
   },
   methods: {
     saveProfile() {
       let self = this;
       const saveData = {
+        authID: this.authID,
+        authEmail: this.authEmail,
         profileImg: this.profileImg,
         email: this.authEmail,
         howManyShops: this.howManyShops,
@@ -139,15 +157,18 @@ export default {
         address: this.address,
         contactName: this.contactName,
         country: this.address,
-        contactEmail: this.contactEmail
+        contactEmail: this.contactEmail,
+        isStudioMode: this.isStudioMode
       };
       db.firestore()
-        .collection("managers")
+        .collection("users")
         .doc(this.authID)
         .set(saveData)
         .then(function() {
           console.log("Document successfully written!");
           self.informSaved = "保存できました";
+          console.log("childスタジオモードは" + self.isStudioMode);
+          self.$emit("show-mode", self.isStudioMode);
           setTimeout(() => {
             self.informSaved = "";
           }, 3000);
@@ -159,12 +180,14 @@ export default {
     readProfile() {
       let self = this;
       db.firestore()
-        .collection("managers")
+        .collection("users")
         .doc(this.authID)
         .get()
         .then(function(doc) {
           if (doc.exists) {
             console.log("Document data:", doc.data());
+            self.authID = firebase.auth().currentUser.uid;
+            self.authEmail = firebase.auth().currentUser.email;
             self.profileImg = doc.data().profileImg;
             self.howManyShops = doc.data().howManyShops;
             self.studioName = doc.data().studioName;
@@ -173,6 +196,9 @@ export default {
             self.contactName = doc.data().contactName;
             self.country = doc.data().country;
             self.contactEmail = doc.data().contactEmail;
+            self.isStudioMode = doc.data().isStudioMode;
+            console.log("childスタジオモードは" + self.isStudioMode);
+            self.$emit("show-mode", self.isStudioMode);
           } else {
             console.log("No such document!");
           }
